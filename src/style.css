@@ -1,0 +1,518 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================
+   Design Tokens
+   语义化 token（--color-*）跟随 shadcn 惯例，由亮/暗两套
+   :root 块提供；换视觉风格时只改这一处。
+   ============================================================ */
+:root {
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Light — warm cream (延续现有气质) */
+  --color-background: #faf7f2;
+  --color-foreground: #1a1817;
+  --color-card: #fffdf9;
+  --color-card-foreground: #1a1817;
+  --color-popover: #fffdf9;
+  --color-popover-foreground: #1a1817;
+  --color-primary: #1a1817;
+  --color-primary-foreground: #faf7f2;
+  --color-secondary: #f1ebe2;
+  --color-secondary-foreground: #1a1817;
+  --color-muted: #efe9df;
+  --color-muted-foreground: #6e6a64;
+  --color-accent: #d4a574;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #e07b6f;
+  --color-border: #e8e0d5;
+  --color-input: #e8e0d5;
+  --color-ring: #d4a574;
+
+  /* Glass surface tokens — light */
+  --glass-bg: rgba(255, 253, 249, 0.42);
+  --glass-bg-hover: rgba(255, 253, 249, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-border-hover: rgba(212, 165, 116, 0.4);
+  --glass-highlight: rgba(255, 255, 255, 0.85);
+  --glass-sheen: rgba(255, 255, 255, 0.5);
+  --glass-shadow-sm: 0 1px 2px rgba(26, 24, 23, 0.04), 0 8px 24px rgba(26, 24, 23, 0.05);
+  --glass-shadow-lg: 0 2px 4px rgba(26, 24, 23, 0.05), 0 16px 40px rgba(26, 24, 23, 0.1);
+
+  /* Code block surface */
+  --code-bg: rgba(26, 24, 23, 0.95);
+  --code-foreground: #f5f0e8;
+
+  /* Page texture */
+  --grid-line: rgba(26, 24, 23, 0.09);
+  --vignette: rgba(250, 247, 242, 0.35);
+}
+
+.dark {
+  /* Dark — warm brown-black + amber (同一气质的暗色版) */
+  --color-background: #171412;
+  --color-foreground: #ece7e0;
+  --color-card: #1e1a17;
+  --color-card-foreground: #ece7e0;
+  --color-popover: #1e1a17;
+  --color-popover-foreground: #ece7e0;
+  --color-primary: #ece7e0;
+  --color-primary-foreground: #171412;
+  --color-secondary: #2a2521;
+  --color-secondary-foreground: #ece7e0;
+  --color-muted: #2a2521;
+  --color-muted-foreground: #a39c92;
+  --color-accent: #d4a574;
+  --color-accent-foreground: #171412;
+  --color-destructive: #e0857a;
+  --color-border: #332d28;
+  --color-input: #332d28;
+  --color-ring: #d4a574;
+
+  /* Glass surface tokens — dark */
+  --glass-bg: rgba(30, 26, 23, 0.55);
+  --glass-bg-hover: rgba(38, 33, 29, 0.65);
+  --glass-border: rgba(236, 231, 224, 0.09);
+  --glass-border-hover: rgba(212, 165, 116, 0.35);
+  --glass-highlight: rgba(255, 255, 255, 0.09);
+  --glass-sheen: rgba(255, 255, 255, 0.06);
+  --glass-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --glass-shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.3), 0 16px 40px rgba(0, 0, 0, 0.45);
+
+  --code-bg: rgba(12, 10, 9, 0.92);
+  --code-foreground: #f5f0e8;
+
+  --grid-line: rgba(236, 231, 224, 0.05);
+  --vignette: rgba(23, 20, 18, 0.45);
+}
+
+/* 将语义 token 映射为 Tailwind 主题色（bg-background / text-foreground 等） */
+@theme inline {
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-card: var(--color-card);
+  --color-card-foreground: var(--color-card-foreground);
+  --color-popover: var(--color-popover);
+  --color-popover-foreground: var(--color-popover-foreground);
+  --color-primary: var(--color-primary);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-foreground: var(--color-secondary-foreground);
+  --color-muted: var(--color-muted);
+  --color-muted-foreground: var(--color-muted-foreground);
+  --color-accent: var(--color-accent);
+  --color-accent-foreground: var(--color-accent-foreground);
+  --color-destructive: var(--color-destructive);
+  --color-border: var(--color-border);
+  --color-input: var(--color-input);
+  --color-ring: var(--color-ring);
+
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+
+  /* 玻璃质感工具类可直接使用 glass-bg / glass-border 等 */
+  --color-glass: var(--glass-bg);
+  --color-glass-hover: var(--glass-bg-hover);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-foreground);
+    line-height: 1.6;
+    background-color: var(--color-background);
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+    background-position: -1px -1px;
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* 边缘暗角，让网格背景向页面中心聚焦 */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse 90% 80% at 50% 40%,
+      transparent 0%,
+      transparent 50%,
+      var(--vignette) 80%,
+      var(--color-background) 100%
+    );
+    z-index: 0;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+  }
+
+  #app {
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+}
+
+@utility container-blog {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   毛玻璃表面 — 全站统一的基础类
+   组件里不再复制这套样式，直接用 .glass-surface 或 GlassCard
+   ============================================================ */
+@layer components {
+  .glass-surface {
+    position: relative;
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      inset 0 1px 0 0 var(--glass-highlight),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+      var(--glass-shadow-sm);
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      background 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease,
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* 磨砂噪点 */
+  .glass-surface::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* 顶部光泽 */
+  .glass-surface::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      var(--glass-sheen) 0%,
+      transparent 60%
+    );
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .glass-surface > * {
+    position: relative;
+    z-index: 3;
+  }
+
+  .glass-hover:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--glass-border-hover);
+    box-shadow:
+      inset 0 1px 0 0 var(--glass-highlight),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+      var(--glass-shadow-lg);
+  }
+
+  .glass-lift:hover {
+    transform: translateY(-3px);
+  }
+}
+
+/* ============================================================
+   Markdown 正文排版（.post-content 为 posts.js 渲染容器）
+   亮/暗两套模式均适配；代码高亮为暖色系
+   ============================================================ */
+.post-content {
+  font-size: 1rem;
+  line-height: 1.85;
+  color: var(--color-foreground);
+}
+
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--color-foreground);
+  letter-spacing: -0.01em;
+  margin-top: 2em;
+  margin-bottom: 0.8em;
+  scroll-margin-top: 96px;
+}
+
+.post-content h1 { font-size: 1.8rem; margin-top: 0; }
+.post-content h2 {
+  font-size: 1.45rem;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+.post-content h3 { font-size: 1.2rem; }
+.post-content h4 { font-size: 1.05rem; }
+
+.post-content p {
+  margin-bottom: 1.4em;
+}
+
+.post-content a {
+  color: var(--color-accent);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-accent) 40%, transparent);
+  transition: border-color 0.2s;
+}
+
+.post-content a:hover {
+  border-color: var(--color-accent);
+}
+
+.post-content strong {
+  font-weight: 600;
+}
+
+.post-content blockquote {
+  margin: 1.6em 0;
+  padding: 12px 20px;
+  border-left: 3px solid var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent) 6%, transparent);
+  border-radius: 0 8px 8px 0;
+  color: var(--color-muted-foreground);
+  font-style: italic;
+}
+
+.post-content blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.post-content ul,
+.post-content ol {
+  padding-left: 1.6em;
+  margin-bottom: 1.4em;
+}
+
+.post-content li { margin-bottom: 0.4em; }
+.post-content li::marker { color: var(--color-accent); }
+
+.post-content code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 2px 6px;
+  background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  color: color-mix(in srgb, var(--color-accent) 80%, var(--color-foreground));
+  border-radius: 4px;
+}
+
+.post-content pre {
+  margin: 0;
+  padding: 18px 20px;
+  background: transparent;
+  color: var(--code-foreground);
+  border-radius: 0;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+.post-content pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+.post-content table {
+  width: 100%;
+  margin: 1.6em 0;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.post-content th,
+.post-content td {
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  text-align: left;
+}
+
+.post-content th {
+  background: color-mix(in srgb, var(--color-accent) 8%, transparent);
+  font-weight: 600;
+}
+
+.post-content hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2.5em 0;
+}
+
+.post-content img {
+  max-width: 100%;
+  border-radius: 10px;
+  margin: 1.6em 0;
+}
+
+/* === 代码块容器（posts.js 注入 .code-block） === */
+.code-block {
+  position: relative;
+  margin: 1.6em 0;
+  background: var(--code-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.code-block pre {
+  margin: 0;
+  padding: 22px 22px 20px;
+  background: transparent !important;
+  border: none !important;
+  overflow-x: auto;
+  line-height: 1.65;
+}
+
+.code-block pre code {
+  background: transparent;
+  color: var(--code-foreground);
+  padding: 0;
+  font-size: 0.85rem;
+  font-family: var(--font-mono);
+}
+
+.code-lang {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(212, 165, 116, 0.7);
+  background: rgba(212, 165, 116, 0.08);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(212, 165, 116, 0.15);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.code-copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: rgba(245, 240, 232, 0.7);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0;
+  z-index: 2;
+}
+
+.code-block:hover .code-copy { opacity: 1; }
+
+.code-copy:hover {
+  background: rgba(212, 165, 116, 0.18);
+  color: #f5f0e8;
+  border-color: rgba(212, 165, 116, 0.3);
+}
+
+.code-copy.copied {
+  background: rgba(150, 200, 130, 0.18);
+  color: #b8d9a8;
+  border-color: rgba(150, 200, 130, 0.3);
+  opacity: 1;
+}
+
+/* === Highlight.js 暖色主题（代码块恒定深底，亮暗通用） === */
+.hljs {
+  background: transparent;
+  color: #f5f0e8;
+}
+.hljs-comment,
+.hljs-quote { color: #8a8478; font-style: italic; }
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section,
+.hljs-link { color: #e8b886; }
+.hljs-subst { color: #f5f0e8; }
+.hljs-string,
+.hljs-title,
+.hljs-name,
+.hljs-type,
+.hljs-attribute,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-tag,
+.hljs-template-variable { color: #b8d9a8; }
+.hljs-built_in,
+.hljs-builtin-name { color: #f0c674; }
+.hljs-number,
+.hljs-meta { color: #d4a574; }
+.hljs-deletion { color: #e07b6f; }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 700; }
